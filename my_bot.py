@@ -10,8 +10,8 @@ try:
         learned_rules = f.read()
 except FileNotFoundError:
     learned_rules = ""
-TELEGRAM_TOKEN = 'YOUR_TELEGRAM_TOKEN'
-GROQ_API_KEY = 'YOUR_GROQ_API_KEY'
+TELEGRAM_TOKEN = os.environ.get('TELEGRAM_TOKEN')
+GROQ_API_KEY = os.environ.get('GROQ_API_KEY')
 bot = telebot.TeleBot(TELEGRAM_TOKEN)
 chat_histories = {}
 @bot.message_handler(func=lambda message: True)
