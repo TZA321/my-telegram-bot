@@ -25,7 +25,7 @@ def keep_alive():
     t = Thread(target=run)
     t.start()
 
-
+bot_users = {}  # {user_id: "user_name"}
 if os.path.exists("chat_history.json"):
     with open("chat_history.json", "r", encoding="utf-8") as f:
         chat_histories = json.load(f)
@@ -58,7 +58,26 @@ def handle_message(message):
     if any(word in user_text.lower() for word in bad_words):
         bot.reply_to(message, "ရိုင်းတဲ့စကားတွေ မပြောပါနဲ့။ အေးအေးဆေးဆေး စကားပြောရအောင်ဗျာ 🙏")
         return
+ADMIN_ID = int(os.getenv("ADMIN_ID", "8278207588"))
 
+@bot.message_handler(commands=['users'])
+def show_users(message):
+    if message.from_user.id != ADMIN_ID:
+        bot.reply_to(message, "ဒီ Command ကို သုံးခွင့် မရှိပါဘူး။")
+        return
+
+    total = len(bot_users)
+    if total == 0:
+        bot.reply_to(message, "စုစုပေါင်း User: 0 ယောက်")
+        return
+
+    lines = [f"- {name} (ID: {uid})" for uid, name in bot_users.items()]
+    text = f"စုစုပေါင်း User: {total} ယောက်\n\n" + "\n".join(lines)
+
+    # Telegram message limit မကျော်အောင် ခွဲပို့
+    max_len = 4000
+    for i in range(0, len(text), max_len):
+        bot.reply_to(message, text[i:i+max_len])
     if chat_id not in chat_histories:
         chat_histories[chat_id] = [
             {"role": "system", "content": f"""မင်းက TZA_321 ဆိုတဲ့ Bot လေးပါ။မင်းက ရယ်စရာပြောတတ်ပြီး ချစ်ခင်ရင်းနှီးတဲ့ သူငယ်ချင်းတစ်ယောက်လို ပြောတတ်တဲ့ AI ပါ။
