@@ -40,6 +40,7 @@ except FileNotFoundError:
 TELEGRAM_TOKEN = os.environ.get('TELEGRAM_TOKEN')
 GROQ_API_KEY = os.environ.get('GROQ_API_KEY')
 bot = telebot.TeleBot(TELEGRAM_TOKEN)
+bot_users = load_users() 
 def save_history():
     with open("chat_history.json", "w", encoding="utf-8") as f:
         json.dump(chat_histories, f, ensure_ascii=False)
