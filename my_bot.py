@@ -53,7 +53,27 @@ def handle_message(message):
 
     if user_text is None:
         return
+USERS_FILE = "users.json"
 
+def load_users():
+    if os.path.exists(USERS_FILE):
+        with open(USERS_FILE, "r", encoding="utf-8") as f:
+            return {int(k): v for k, v in json.load(f).items()}
+    return {}
+
+def save_users(users):
+    with open(USERS_FILE, "w", encoding="utf-8") as f:
+        json.dump({str(k): v for k, v in users.items()}, f, ensure_ascii=False, indent=2)
+
+bot_users = load_users()
+
+@bot.message_handler(commands=['start'])
+def start(message):
+    uid = message.from_user.id
+    name = message.from_user.first_name or "Unknown"
+    bot_users[uid] = name
+    save_users(bot_users)          # file ထဲ သိမ်း
+    bot.reply_to(message, f"မင်္ဂလာပါ {name}!")
     bad_words = ["လီး", "လိုး", "ဖုတ်", "ဂွေးထု", "လဥ", "sex", "porn"]
     if any(word in user_text.lower() for word in bad_words):
         bot.reply_to(message, "ရိုင်းတဲ့စကားတွေ မပြောပါနဲ့။ အေးအေးဆေးဆေး စကားပြောရအောင်ဗျာ 🙏")
