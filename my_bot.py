@@ -25,7 +25,6 @@ def keep_alive():
     t = Thread(target=run)
     t.start()
 
-bot_users = {}  # {user_id: "user_name"}
 if os.path.exists("chat_history.json"):
     with open("chat_history.json", "r", encoding="utf-8") as f:
         chat_histories = json.load(f)
@@ -53,6 +52,9 @@ def handle_message(message):
 
     if user_text is None:
         return
+    if chat_id not in bot_users:
+        bot_users[chat_id] = user_name
+        save_users(bot_users)
 USERS_FILE = "users.json"
 
 def load_users():
