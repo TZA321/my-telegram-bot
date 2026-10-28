@@ -11,6 +11,22 @@ import os
 from threading import Thread
 from flask import Flask
 
+USERS_FILE = "users.json"
+
+def load_users():
+    if os.path.exists("users.json"):
+        with open("users.json", "r", encoding="utf-8") as f:
+            try:
+                return {int(k): v for k, v in json.load(f).items()}
+            except:
+                return {}
+    return {}
+
+def save_users(users):
+    with open(USERS_FILE, "w", encoding="utf-8") as f:
+        json.dump({str(k): v for k, v in users.items()}, f, ensure_ascii=False, indent=2)
+
+
 app = Flask('')
 
 @app.route('/')
@@ -40,15 +56,6 @@ except FileNotFoundError:
 TELEGRAM_TOKEN = os.environ.get('TELEGRAM_TOKEN')
 GROQ_API_KEY = os.environ.get('GROQ_API_KEY')
 bot = telebot.TeleBot(TELEGRAM_TOKEN)
-USERS_FILE = "users.json"
-def load_users():
-    if os.path.exists("users.json"):
-        with open("users.json", "r", encoding="utf-8") as f:
-            try:
-                return {int(k): v for k, v in json.load(f).items()}
-            except:
-                return {}
-    return {}
 bot_users = load_users() 
 def save_history():
     with open("chat_history.json", "w", encoding="utf-8") as f:
@@ -65,10 +72,6 @@ def handle_message(message):
     if chat_id not in bot_users:
         bot_users[chat_id] = user_name
         save_users(bot_users)
-
-def save_users(users):
-    with open(USERS_FILE, "w", encoding="utf-8") as f:
-        json.dump({str(k): v for k, v in users.items()}, f, ensure_ascii=False, indent=2)
 
 @bot.message_handler(commands=['start'])
 def start(message):
