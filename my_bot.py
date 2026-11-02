@@ -98,6 +98,7 @@ def handle_message(message):
     chat_id = message.chat.id
     user_name = message.from_user.first_name or "သူငယ်ချင်း"
     user_text = message.text
+    bot.send_chat_action(chat_id, 'typing')
 
     if user_text is None:
         return
