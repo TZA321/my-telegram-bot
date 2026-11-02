@@ -219,7 +219,6 @@ print("Bot is running...")
 if __name__ == "__main__":
     keep_alive() 	
     print("Bot is running...")
-    bot.infinity_polling(timeout=20, long_polling_timeout=10)
 while True:
     try:
         bot.infinity_polling(timeout=20, long_polling_timeout=10)
