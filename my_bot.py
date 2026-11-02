@@ -61,18 +61,6 @@ bot_users = load_users()
 def save_history():
     with open("chat_history.json", "w", encoding="utf-8") as f:
         json.dump(chat_histories, f, ensure_ascii=False)
-@bot.message_handler(func=lambda message: True)
-def handle_message(message):
-    bot.send_chat_action(message.chat.id, 'typing')
-    chat_id = message.chat.id
-    user_name = message.from_user.first_name
-    user_text = message.text
-
-    if user_text is None:
-        return
-    if chat_id not in bot_users:
-        bot_users[chat_id] = user_name
-        save_users(bot_users)
 
 @bot.message_handler(commands=['start'])
 def start(message):
@@ -110,6 +98,13 @@ def handle_message(message):
     chat_id = message.chat.id
     user_name = message.from_user.first_name or "သူငယ်ချင်း"
     user_text = message.text
+
+    if user_text is None:
+        return
+    if chat_id not in bot_users:
+        bot_users[chat_id] = user_name
+        save_users(bot_users)
+        
     if chat_id not in chat_histories:
         chat_histories[chat_id] = [
             {"role": "system", "content": f"""မင်းက TZA_321 ဆိုတဲ့ Bot လေးပါ။မင်းက ရယ်စရာပြောတတ်ပြီး ချစ်ခင်ရင်းနှီးတဲ့ သူငယ်ချင်းတစ်ယောက်လို ပြောတတ်တဲ့ AI ပါ။
