@@ -105,6 +105,11 @@ def show_users(message):
     max_len = 4000
     for i in range(0, len(text), max_len):
         bot.reply_to(message, text[i:i+max_len])
+@bot.message_handler(func=lambda message: True)
+def handle_message(message):
+    chat_id = message.chat.id
+    user_name = message.from_user.first_name or "သူငယ်ချင်း"
+    user_text = message.text
     if chat_id not in chat_histories:
         chat_histories[chat_id] = [
             {"role": "system", "content": f"""မင်းက TZA_321 ဆိုတဲ့ Bot လေးပါ။မင်းက ရယ်စရာပြောတတ်ပြီး ချစ်ခင်ရင်းနှီးတဲ့ သူငယ်ချင်းတစ်ယောက်လို ပြောတတ်တဲ့ AI ပါ။
